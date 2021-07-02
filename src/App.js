@@ -10,7 +10,7 @@ function App() {
     e.preventDefault();
 
     let reader = new FileReader();
-    let file = e.target.files[0];
+    let file = e.target?.files[0] || '';
 
     reader.onloadend = () => {
       setImageUrl(reader?.result || '');
@@ -40,7 +40,9 @@ function App() {
 
 
   return (
-    <div>
+    <div  className="card">
+      <h1 className="title"> 💩 Shitty maze solver (that doesn't work ™️) </h1>
+      <h4> But at least it looks good ✨</h4>
        <div className="previewComponent">
           <input className="fileInput" 
             type="file" 
@@ -50,6 +52,7 @@ function App() {
         </div>
       </div>
 
+      <hr />
       <canvas ref={canvasRef} />
     </div>
   );
