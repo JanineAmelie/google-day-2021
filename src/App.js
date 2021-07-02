@@ -3,7 +3,7 @@ import './App.css';
 import React, { useState, useRef, useEffect } from 'react';
 
 function App() {
-  const [imageUrl, setImageUrl] = useState("");
+  const [image64, setImage64] = useState("");
   const canvasRef = useRef(null)
 
   const handleImageChange = (e) => {
@@ -13,27 +13,36 @@ function App() {
     let file = e.target?.files[0] || '';
 
     reader.onloadend = () => {
-      setImageUrl(reader?.result || '');
+      setImage64(reader?.result || '');
     }
     reader.readAsDataURL(file)
   }
 
 
   useEffect(() => {
-    if (imageUrl) {
+    if (image64) {
       const canvas = canvasRef.current
-      const context = canvas.getContext('2d')
-      //Our first draw
-      context.fillStyle = '#000000'
-      context.fillRect(0, 0, context.canvas.width, context.canvas.height)
+
+      const myImage = document.getElementById('maze');
+      const w = myImage.width, h = myImage.height;
+    
+      canvas.width = w;
+      canvas.height = h;
+
+      // Draw image onto the canvas
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(myImage, 0, 0);
+
+      const data = ctx.getImageData(0, 0, w, h);
+      console.log(data);
     }
-  }, [imageUrl])
+  }, [image64])
 
 
   let imagePreview = null;
 
-  if (imageUrl) {
-    imagePreview = (<img id="maze" alt="maze" src={imageUrl} />);
+  if (image64) {
+    imagePreview = (<img id="maze" alt="maze" src={image64} />);
   } else {
     imagePreview = (<div className="previewText">Please select a maze image to upload</div>);
   }
@@ -47,7 +56,7 @@ function App() {
           <input className="fileInput" 
             type="file" 
             onChange={(e)=> handleImageChange(e)} />
-        <div className="imgPreview">
+        <div style={{ display: 'none'}} className="imgPreview">
           {imagePreview}
         </div>
       </div>
