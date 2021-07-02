@@ -1,9 +1,10 @@
 
 import './App.css';
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 function App() {
   const [image, setImage] = useState({ preview: "", raw: "" });
+  const canvasRef = useRef(null)
 
   const handleImageChange = (e) => {
     e.preventDefault();
@@ -21,6 +22,22 @@ function App() {
     reader.readAsDataURL(file)
   }
 
+  const drawImage = () => {
+    const canvas = canvasRef.current
+    const context = canvas.getContext('2d')
+    //Our first draw
+    context.fillStyle = '#000000'
+    context.fillRect(0, 0, context.canvas.width, context.canvas.height)
+  }
+
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    const context = canvas.getContext('2d')
+    //Our first draw
+    context.fillStyle = '#000000'
+    context.fillRect(0, 0, context.canvas.width, context.canvas.height)
+  }, image)
 
   let {imagePreviewUrl} = image;
   let imagePreview = null;
@@ -41,6 +58,8 @@ function App() {
           {imagePreview}
         </div>
       </div>
+
+      <canvas ref={canvasRef} />
     </div>
   );
 }
